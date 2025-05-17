@@ -80,32 +80,6 @@ def atten_loss_pearson(s_attentions, t_attentions, s_atten_ddindex, s_atten_laye
 
     return total_pearson_loss
 
-
-
-
-#根据字符位置找到对应的 token 索引
-def number_index(decoded_tokens):
-    digit_indexes = []
-    dot_indexes = []
-    flag_q_end = 0 #问题中的句号不算，整个问题算作一个步骤
-    len_decoded_tokens = len(decoded_tokens)
-    for idx, token in enumerate(decoded_tokens):
-        if any(char.isdigit() for char in token):
-            if token=="<0x0A>":
-                pass
-            else:
-                digit_indexes.append(idx)
-        elif flag_q_end==0 and token in ["?","?Ċ"]:
-            dot_indexes.append(idx)
-            flag_q_end = 1
-        elif flag_q_end==1 and token in [".",".Ċ",".ĊĊ"]: 
-            if idx+1 < len_decoded_tokens:
-                if decoded_tokens[idx-1]=="▁P" and decoded_tokens[idx+1]=="E":
-                    pass
-            else:
-                dot_indexes.append(idx)
-    return digit_indexes,dot_indexes
-
 #将tokenizer中分开进行编码的数字进行合并     
 def cat_digit_index(digit_indexes):
     cat_digit_indexes = []
